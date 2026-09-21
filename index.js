@@ -4,11 +4,9 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-
+const authRoutes = require("./routes/authRoutes");
 const connectDB = require("./config/db");
-
 dotenv.config();
-
 const app = express();
 
 // ============================
@@ -33,6 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/books", require("./routes/bookRoutes"));
+app.use("/api/auth", authRoutes);
 
 // ============================
 // SERVER
