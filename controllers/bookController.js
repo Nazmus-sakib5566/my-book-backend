@@ -24,6 +24,7 @@ const addBook = async (req, res) => {
     }
 
     const book = await Book.create({
+      userId: req.user.id,
       name,
       totalPages: pages,
       currentPage: 0,
@@ -47,7 +48,9 @@ const addBook = async (req, res) => {
 // ============================
 const getBooks = async (req, res) => {
   try {
-    const books = await Book.find().sort({
+    const books = await Book.find({
+      userId: req.user.id,
+    }).sort({
       createdAt: -1,
     });
 
@@ -80,7 +83,10 @@ const getBooks = async (req, res) => {
 // ============================
 const getBook = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id);
+    const book = await Book.findOne({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
 
     if (!book) {
       return res.status(404).json({
@@ -115,7 +121,10 @@ const updatePage = async (req, res) => {
   try {
     const { currentPage } = req.body;
 
-    const book = await Book.findById(req.params.id);
+    const book = await Book.findOne({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
 
     if (!book) {
       return res.status(404).json({
@@ -176,7 +185,10 @@ const updatePage = async (req, res) => {
 // ============================
 const deleteBook = async (req, res) => {
   try {
-    const book = await Book.findByIdAndDelete(req.params.id);
+    const book = await Book.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
 
     if (!book) {
       return res.status(404).json({
